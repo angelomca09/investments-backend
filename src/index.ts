@@ -18,8 +18,7 @@ app.get("/", async () => {
 });
 
 // Get the host and port from the environment variables or use default values
-const host = process.env.BASE_URL || "localhost";
-
+const host = process.env.BASE_URL || "127.0.0.1";
 // + is used to convert the string to a number
 const port = +(process.env.PORT || 3000);
 
