@@ -2,6 +2,8 @@ import fastify from "fastify";
 import cors from "@fastify/cors";
 import dotenv from "dotenv";
 
+import { investmentsRoutes } from "./routes/investments.route";
+
 // Load the environment variables
 dotenv.config();
 
@@ -12,10 +14,7 @@ app.register(cors, {
   origin: true,
 });
 
-//TODO: Add your routes here
-app.get("/", async () => {
-  return { hello: "world" };
-});
+app.register(investmentsRoutes);
 
 // Get the host and port from the environment variables or use default values
 const host = process.env.BASE_URL || "127.0.0.1";
