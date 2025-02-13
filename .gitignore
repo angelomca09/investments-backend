@@ -3,3 +3,8 @@ node_modules
 .env
 
 /.vscode
+
+# Prisma
+prisma/migrations
+prisma/*.db
+prisma/*.db-journal
