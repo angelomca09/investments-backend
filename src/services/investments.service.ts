@@ -1,40 +1,45 @@
 import { InvestmentsStatus } from "../enums/InvestmentsStatus";
 import { InvestmentsType } from "../enums/InvestmentsType";
 import { Investments } from "../interfaces/Investments";
+import { prisma } from "../lib/prisma";
 
 async function getInvestments(): Promise<Investments[]> {
 
-  //TODO: Implement the logic to get the investments from the database
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve([
-        {
-          id: 1,
-          description: "Investment 1",
-          value: 1000,
-          date: "2021-01-01",
-          status: InvestmentsStatus.DONE,
-          type: InvestmentsType.GAMES,
-        },
-        {
-          id: 2,
-          description: "Investment 2",
-          value: 500,
-          date: "2021-01-01",
-          status: InvestmentsStatus.PENDING,
-          type: InvestmentsType.HEALTH_CARE,
-        },
-        {
-          id: 3,
-          description: "Investment 3",
-          value: 2000,
-          date: "2021-01-01",
-          status: InvestmentsStatus.CANCELED,
-          type: InvestmentsType.BILLS,
-        }
-      ]);
-    }, 1000);
+  const investments = await prisma.investments.findMany({
+    select: {
+      id: true,
+      description: true,
+      value: true,
+      date: true,
+      status: true,
+      type: true,
+    },
   });
+
+  const convertedInvestments: Investments[] = investments.map(inv => ({
+    ...inv,
+    date: inv.date.toISOString(),
+    status: InvestmentsStatus[inv.status],
+    type: InvestmentsType[inv.type]
+  }))
+
+  return convertedInvestments;
 }
 
-export default { getInvestments };
+async function createInvestment(investment: Omit<Investments,"id">): Promise<Investments> {
+  const createdInvestment = await prisma.investments.create({
+    data: {
+      ...investment,
+      date: new Date(investment.date),
+    }
+  });
+
+  return {
+    ...createdInvestment,
+    date: createdInvestment.date.toISOString(),
+    status: InvestmentsStatus[createdInvestment.status],
+    type: InvestmentsType[createdInvestment.type]
+  };
+}
+
+export default { getInvestments, createInvestment };
