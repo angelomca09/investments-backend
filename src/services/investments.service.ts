@@ -2,19 +2,11 @@ import { InvestmentsStatus } from "../enums/InvestmentsStatus";
 import { InvestmentsType } from "../enums/InvestmentsType";
 import { Investments } from "../interfaces/Investments";
 import { prisma } from "../lib/prisma";
+import { convertInvestment } from "../utils/investments.utils";
 
 async function getInvestments(): Promise<Investments[]> {
 
-  const investments = await prisma.investments.findMany({
-    select: {
-      id: true,
-      description: true,
-      value: true,
-      date: true,
-      status: true,
-      type: true,
-    },
-  });
+  const investments = await prisma.investments.findMany();
 
   const convertedInvestments: Investments[] = investments.map(inv => ({
     ...inv,
@@ -34,12 +26,7 @@ async function createInvestment(investment: Omit<Investments,"id">): Promise<Inv
     }
   });
 
-  return {
-    ...createdInvestment,
-    date: createdInvestment.date.toISOString(),
-    status: InvestmentsStatus[createdInvestment.status],
-    type: InvestmentsType[createdInvestment.type]
-  };
+  return convertInvestment(createdInvestment);
 }
 
 export default { getInvestments, createInvestment };
