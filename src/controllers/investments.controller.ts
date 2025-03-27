@@ -60,8 +60,20 @@ async function updateInvestment(req: FastifyRequest, reply: FastifyReply) {
   reply.send(updatedInvestment);
 }
 
+async function deleteInvestment(req: FastifyRequest, reply: FastifyReply) {
+  const paramsSchema = z.object({
+    id: z.string().uuid()
+  });
+
+  const { id } = paramsSchema.parse(req.params);
+
+  await investmentsService.deleteInvestment(id);
+  reply.send();
+}
+
 export default {
   getInvestments,
   createInvestment,
-  updateInvestment
+  updateInvestment,
+  deleteInvestment
 }

@@ -41,9 +41,15 @@ async function updateInvestment(id: string, investment: Partial<Omit<Investments
   return convertInvestment(updatedInvestment);
 }
 
+async function deleteInvestment(id: string): Promise<void> {
+  await prisma.investments.delete({
+    where: { id }
+  });
+}
 
-export default { 
-  getInvestments, 
-  createInvestment, 
-  updateInvestment 
+export default {
+  getInvestments,
+  createInvestment,
+  updateInvestment,
+  deleteInvestment
 };
