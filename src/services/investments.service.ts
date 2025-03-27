@@ -18,7 +18,7 @@ async function getInvestments(): Promise<Investments[]> {
   return convertedInvestments;
 }
 
-async function createInvestment(investment: Omit<Investments,"id">): Promise<Investments> {
+async function createInvestment(investment: Omit<Investments, "id">): Promise<Investments> {
   const createdInvestment = await prisma.investments.create({
     data: {
       ...investment,
@@ -29,4 +29,21 @@ async function createInvestment(investment: Omit<Investments,"id">): Promise<Inv
   return convertInvestment(createdInvestment);
 }
 
-export default { getInvestments, createInvestment };
+async function updateInvestment(id: string, investment: Partial<Omit<Investments, "id">>): Promise<Investments> {
+  const updatedInvestment = await prisma.investments.update({
+    where: { id },
+    data: {
+      ...investment,
+      date: investment.date ? new Date(investment.date) : undefined,
+    }
+  });
+
+  return convertInvestment(updatedInvestment);
+}
+
+
+export default { 
+  getInvestments, 
+  createInvestment, 
+  updateInvestment 
+};
