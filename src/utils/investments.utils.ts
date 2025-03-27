@@ -4,7 +4,7 @@ import { InvestmentsType } from "../enums/InvestmentsType";
 import { $Enums } from "@prisma/client";
 
 export function convertInvestment(prismaInvestment: {
-  id: number;
+  id: string;
   description: string;
   value: number;
   date: Date;

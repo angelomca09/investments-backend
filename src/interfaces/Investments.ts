@@ -2,7 +2,7 @@ import { InvestmentsStatus } from "../enums/InvestmentsStatus";
 import { InvestmentsType } from "../enums/InvestmentsType";
 
 export interface Investments {
-  id: number;
+  id: string;
   description: string;
   value: number;
   date: string;
